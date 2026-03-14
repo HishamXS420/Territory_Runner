@@ -70,9 +70,9 @@ CREATE TABLE IF NOT EXISTS user_statistics (
 );
 
 -- Create Indexes for better query performance
-CREATE INDEX idx_running_sessions_user_id ON running_sessions(user_id);
-CREATE INDEX idx_route_coordinates_session_id ON route_coordinates(running_session_id);
-CREATE INDEX idx_territories_user_id ON territories(user_id);
-CREATE INDEX idx_user_statistics_user_id ON user_statistics(user_id);
-CREATE INDEX idx_user_statistics_area ON user_statistics(total_territory_area DESC);
-CREATE INDEX idx_user_statistics_distance ON user_statistics(total_distance DESC);
+CREATE INDEX IF NOT EXISTS idx_running_sessions_user_id ON running_sessions(user_id);
+CREATE INDEX IF NOT EXISTS idx_route_coordinates_session_id ON route_coordinates(running_session_id);
+CREATE INDEX IF NOT EXISTS idx_territories_user_id ON territories(user_id);
+CREATE INDEX IF NOT EXISTS idx_user_statistics_user_id ON user_statistics(user_id);
+CREATE INDEX IF NOT EXISTS idx_user_statistics_area ON user_statistics(total_territory_area DESC);
+CREATE INDEX IF NOT EXISTS idx_user_statistics_distance ON user_statistics(total_distance DESC);
