@@ -137,30 +137,28 @@ async function loadTerritories() {
       });
     });
 
-    // Second pass: detect overlapping centers and assign offsets
-    const CLOSENESS_THRESHOLD = 0.0015; // ~150m in degrees
-    const OFFSET_DIRECTIONS = [
-      [0, -18],   // top
-      [0,  18],   // bottom
-      [-20, -10], // top-left
-      [ 20, -10], // top-right
-      [-20,  10], // bottom-left
-      [ 20,  10], // bottom-right
-    ];
+    // Second pass: detect overlapping centers and push labels apart
+    // Process pairs: one goes UP, the other goes DOWN
+    const CLOSENESS_THRESHOLD = 0.003; // ~300m in degrees
+    const processed = new Set();
 
     for (let i = 0; i < territoryData.length; i++) {
-      let dirIndex = 0;
-      for (let j = 0; j < territoryData.length; j++) {
-        if (i === j) continue;
+      for (let j = i + 1; j < territoryData.length; j++) {
         const dLat = Math.abs(territoryData[i].centerLat - territoryData[j].centerLat);
         const dLng = Math.abs(territoryData[i].centerLng - territoryData[j].centerLng);
 
         if (dLat < CLOSENESS_THRESHOLD && dLng < CLOSENESS_THRESHOLD) {
-          // These two are close — offset the current one
-          const dir = OFFSET_DIRECTIONS[dirIndex % OFFSET_DIRECTIONS.length];
-          territoryData[i].offsetX = dir[0];
-          territoryData[i].offsetY = dir[1];
-          dirIndex++;
+          // Push i upward and j downward (or vice versa if already assigned)
+          if (!processed.has(i)) {
+            territoryData[i].offsetX = 0;
+            territoryData[i].offsetY = -35;
+            processed.add(i);
+          }
+          if (!processed.has(j)) {
+            territoryData[j].offsetX = 0;
+            territoryData[j].offsetY = 35;
+            processed.add(j);
+          }
         }
       }
     }
