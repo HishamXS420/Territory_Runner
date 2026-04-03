@@ -112,8 +112,10 @@ async function loadTerritories() {
 
     const bounds = L.latLngBounds([]);
 
+    // First pass: collect all territory data with their centers
+    const territoryData = [];
+
     territories.forEach((territory) => {
-      // Support both camelCase (Mongoose) and snake_case field names
       const coords = territory.polygonCoords || territory.polygon_coords;
       const ownerId = territory.userId?._id || territory.userId || territory.user_id;
       const ownerName = territory.userId?.username || territory.username || 'Unknown';
@@ -122,19 +124,63 @@ async function loadTerritories() {
         return;
       }
 
-      const territoryLabel = ownerName;
+      // Calculate polygon center
+      let latSum = 0, lngSum = 0;
+      coords.forEach(c => { latSum += c[0]; lngSum += c[1]; });
+      const centerLat = latSum / coords.length;
+      const centerLng = lngSum / coords.length;
 
-      const polygon = L.polygon(coords, getTerritoryStyle(String(ownerId)))
+      territoryData.push({
+        territory, coords, ownerId, ownerName,
+        centerLat, centerLng,
+        offsetX: 0, offsetY: 0,
+      });
+    });
+
+    // Second pass: detect overlapping centers and assign offsets
+    const CLOSENESS_THRESHOLD = 0.0015; // ~150m in degrees
+    const OFFSET_DIRECTIONS = [
+      [0, -18],   // top
+      [0,  18],   // bottom
+      [-20, -10], // top-left
+      [ 20, -10], // top-right
+      [-20,  10], // bottom-left
+      [ 20,  10], // bottom-right
+    ];
+
+    for (let i = 0; i < territoryData.length; i++) {
+      let dirIndex = 0;
+      for (let j = 0; j < territoryData.length; j++) {
+        if (i === j) continue;
+        const dLat = Math.abs(territoryData[i].centerLat - territoryData[j].centerLat);
+        const dLng = Math.abs(territoryData[i].centerLng - territoryData[j].centerLng);
+
+        if (dLat < CLOSENESS_THRESHOLD && dLng < CLOSENESS_THRESHOLD) {
+          // These two are close — offset the current one
+          const dir = OFFSET_DIRECTIONS[dirIndex % OFFSET_DIRECTIONS.length];
+          territoryData[i].offsetX = dir[0];
+          territoryData[i].offsetY = dir[1];
+          dirIndex++;
+        }
+      }
+    }
+
+    // Third pass: render polygons with computed offsets
+    territoryData.forEach((td) => {
+      const territoryLabel = td.ownerName;
+
+      const polygon = L.polygon(td.coords, getTerritoryStyle(String(td.ownerId)))
         .bindPopup(`
           <div style="font-family:sans-serif;min-width:130px;">
             <p style="font-weight:700;font-size:13px;margin-bottom:5px;">${territoryLabel}</p>
-            <p style="color:#555;font-size:12px;">Area: <strong>${Number(territory.area || 0).toFixed(2)} m²</strong></p>
+            <p style="color:#555;font-size:12px;">Area: <strong>${Number(td.territory.area || 0).toFixed(2)} m²</strong></p>
           </div>
         `)
         .bindTooltip(territoryLabel, {
           permanent: true,
           direction: 'center',
           className: 'territory-tooltip',
+          offset: [td.offsetX, td.offsetY],
         });
 
       polygon.addTo(territoryLayerGroup);
