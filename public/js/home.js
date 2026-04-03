@@ -122,7 +122,7 @@ async function loadTerritories() {
         return;
       }
 
-      const territoryLabel = `${ownerName}'s territory`;
+      const territoryLabel = ownerName;
 
       const polygon = L.polygon(coords, getTerritoryStyle(String(ownerId)))
         .bindPopup(`
