@@ -9,35 +9,13 @@ services:
     envVars:
       - key: NODE_ENV
         value: production
+      - key: PORT
+        value: 9999
+      - key: MONGODB_URI
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
       - key: JWT_EXPIRE
         value: 7d
       - key: APP_URL
         value: https://territory-runner.onrender.com
-      - key: JWT_SECRET
-        generateValue: true
-      - key: DB_HOST
-        fromDatabase:
-          name: territory-runner-db
-          property: host
-      - key: DB_PORT
-        fromDatabase:
-          name: territory-runner-db
-          property: port
-      - key: DB_NAME
-        fromDatabase:
-          name: territory-runner-db
-          property: database
-      - key: DB_USER
-        fromDatabase:
-          name: territory-runner-db
-          property: user
-      - key: DB_PASSWORD
-        fromDatabase:
-          name: territory-runner-db
-          property: password
-
-databases:
-  - name: territory-runner-db
-    databaseName: territory_running_app
-    user: territory_runner_user
-    plan: free
