@@ -377,3 +377,20 @@ body {
     height: 340px;
   }
 }
+
+/* Territory label tooltip */
+.territory-tooltip {
+  background: rgba(15, 15, 15, 0.82) !important;
+  border: none !important;
+  border-radius: 12px !important;
+  color: #fff !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  padding: 3px 10px !important;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.5) !important;
+  white-space: nowrap !important;
+  pointer-events: none !important;
+}
+.territory-tooltip::before {
+  display: none !important;
+}

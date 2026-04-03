@@ -120,38 +120,15 @@ async function loadTerritories() {
             <p style="font-weight:700;font-size:13px;margin-bottom:5px;">${territoryLabel}</p>
             <p style="color:#555;font-size:12px;">Area: <strong>${Number(territory.area || 0).toFixed(2)} m²</strong></p>
           </div>
-        `);
+        `)
+        .bindTooltip(territoryLabel, {
+          permanent: true,
+          direction: 'center',
+          className: 'territory-tooltip',
+        });
 
       polygon.addTo(territoryLayerGroup);
       bounds.extend(polygon.getBounds());
-
-      // Place a centered label at the territory center
-      const centerLat = territory.centerLat || territory.center_lat;
-      const centerLon = territory.centerLon || territory.center_lon;
-      if (centerLat && centerLon) {
-        const label = L.divIcon({
-          className: '',
-          html: `<div style="
-            display:inline-block;
-            background: rgba(15,15,15,0.78);
-            color: #fff;
-            padding: 3px 9px;
-            border-radius: 12px;
-            font-size: 11px;
-            font-weight: 700;
-            font-family: sans-serif;
-            white-space: nowrap;
-            transform: translate(-50%, -50%);
-            pointer-events: none;
-            box-shadow: 0 1px 5px rgba(0,0,0,0.5);
-            letter-spacing: 0.2px;
-          ">${territoryLabel}</div>`,
-          iconSize: [0, 0],
-          iconAnchor: [0, 0],
-        });
-        L.marker([centerLat, centerLon], { icon: label })
-          .addTo(territoryLayerGroup);
-      }
     });
 
     if (bounds.isValid()) {

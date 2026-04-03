@@ -236,41 +236,21 @@ function renderCompletedRunOnMap(isClosedLoop) {
   }
 
   if (isClosedLoop && flattenedRoute.length >= 3) {
+    const username = getUsernameFromToken();
+    const label = username ? `${username}'s territory` : 'Territory Captured!';
+
     completionLayer = L.polygon(flattenedRoute, {
       color: '#16a34a',
       fillColor: '#22c55e',
       fillOpacity: 0.25,
       weight: 3,
-    }).addTo(map);
-
-    // Add centered territory label
-    const username = getUsernameFromToken();
-    if (username) {
-      const latSum = flattenedRoute.reduce((s, p) => s + p[0], 0);
-      const lonSum = flattenedRoute.reduce((s, p) => s + p[1], 0);
-      const centerLat = latSum / flattenedRoute.length;
-      const centerLon = lonSum / flattenedRoute.length;
-      const label = L.divIcon({
-        className: '',
-        html: `<div style="
-          display:inline-block;
-          background: rgba(15,15,15,0.78);
-          color: #fff;
-          padding: 3px 9px;
-          border-radius: 12px;
-          font-size: 11px;
-          font-weight: 700;
-          font-family: sans-serif;
-          white-space: nowrap;
-          transform: translate(-50%, -50%);
-          pointer-events: none;
-          box-shadow: 0 1px 5px rgba(0,0,0,0.5);
-        ">${username}'s territory</div>`,
-        iconSize: [0, 0],
-        iconAnchor: [0, 0],
-      });
-      L.marker([centerLat, centerLon], { icon: label }).addTo(map);
-    }
+    })
+    .bindTooltip(label, {
+      permanent: true,
+      direction: 'center',
+      className: 'territory-tooltip',
+    })
+    .addTo(map);
   }
 
   const bounds = L.latLngBounds(flattenedRoute);
