@@ -1,52 +1,67 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Territory Running - Leaderboard</title>
-    <link rel="stylesheet" href="/css/style.css">
-    <link rel="stylesheet" href="/css/leaderboard.css">
+    <title>Leaderboard | Territory Runner</title>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.24/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <nav class="navbar">
-        <div class="container">
-            <h1>Territory Running App</h1>
-            <div class="nav-links">
-                <a href="/">Home</a>
-                <a href="/leaderboard">Leaderboard</a>
-                <button onclick="logout()" class="nav-logout">Logout</button>
-            </div>
+<body class="min-h-screen bg-base-200">
+
+    <!-- Navbar -->
+    <header class="border-b border-base-300 bg-base-100 sticky top-0 z-50">
+        <div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
+            <h1 class="text-lg font-bold">🏆 Leaderboard</h1>
+            <nav class="flex gap-2">
+                <a href="/" class="btn btn-sm btn-ghost">← Home</a>
+                <button onclick="logout()" class="btn btn-sm btn-error text-white">Logout</button>
+            </nav>
         </div>
-    </nav>
+    </header>
 
-    <main class="container">
-        <section class="leaderboard">
-            <div class="tabs">
-                <button class="tab-btn active" onclick="switchLeaderboard('area')">Leaderboard by Territory Area</button>
-                <button class="tab-btn" onclick="switchLeaderboard('distance')">Leaderboard by Distance</button>
+    <main class="mx-auto max-w-3xl px-4 py-8">
+
+        <!-- Dark gradient hero section matching project-Impossible style -->
+        <section class="rounded-2xl bg-gradient-to-br from-[#1C1932] via-[#2A1B4A] to-[#3B1764] text-white px-6 py-10 mb-6 shadow-xl">
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-1">Weekly Leaderboard</h2>
+            <p class="text-center text-white/60 mb-8">Top performers this week</p>
+
+            <!-- Tabs -->
+            <div class="tabs tabs-boxed bg-white/10 mb-8 justify-center">
+                <button id="tab-area" class="tab tab-active text-white font-semibold" onclick="switchLeaderboard('area')">🗺️ By Territory</button>
+                <button id="tab-distance" class="tab text-white/70 font-semibold" onclick="switchLeaderboard('distance')">📏 By Distance</button>
             </div>
 
-            <table id="leaderboard-table" class="leaderboard-table">
-                <thead>
-                    <tr>
-                        <th>Rank</th>
-                        <th>Username</th>
-                        <th id="metric-header">Territory Area (m²)</th>
-                        <th>Running Sessions</th>
-                    </tr>
-                </thead>
-                <tbody id="leaderboard-body">
-                    <!-- Populated by JavaScript -->
-                </tbody>
-            </table>
+            <!-- Top 3 -->
+            <div id="top-three" class="space-y-3 mb-6">
+                <!-- Populated by JS -->
+            </div>
 
-            <div id="user-rank">
-                <p>Your Rank: <span id="your-rank">-</span></p>
+            <!-- Rank 4-10 -->
+            <div id="top-four-to-ten" class="rounded-xl bg-white/10 border border-white/10 p-5">
+                <h3 class="text-lg font-bold mb-4">Rankings 4–10</h3>
+                <div id="leaderboard-rest" class="space-y-3">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+
+            <!-- Your rank -->
+            <div id="user-rank" class="mt-6 rounded-xl bg-white/10 border border-white/10 px-5 py-4 text-center font-semibold text-lg">
+                Your Rank: <span id="your-rank" class="text-yellow-300">–</span>
             </div>
         </section>
+
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="/js/leaderboard.js"></script>
+    <script>
+        function logout() {
+            localStorage.removeItem('token');
+            window.location.href = '/login';
+        }
+    </script>
 </body>
 </html>

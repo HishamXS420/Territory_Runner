@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign Up | Territory Runner</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/daisyui@4.12.24/dist/full.min.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+     <link rel="icon" href="images/runner.png" type="image/x-icon">
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="min-h-screen bg-base-200">
+    <main class="mx-auto flex min-h-screen max-w-lg items-center px-4 py-10">
+      <section class="card w-full bg-base-100 shadow-lg">
+        <div class="card-body">
+          <a href="index.html" class="btn btn-ghost btn-sm w-fit">Back to Home</a>
+          <h1 class="card-title text-2xl">Sign Up</h1>
+         
+          <form id="signupForm" class="mt-2 space-y-4">
+            <label class="form-control w-full">
+              <span class="label-text mb-1">Full Name</span>
+              <input type="text" id="fullName" class="input input-bordered w-full" required />
+            </label>
+
+            <label class="form-control w-full">
+              <span class="label-text mb-1">Username</span>
+              <input type="text" id="username" class="input input-bordered w-full" required />
+            </label>
+
+            <label class="form-control w-full">
+              <span class="label-text mb-1">Email</span>
+              <input type="email" id="email" class="input input-bordered w-full" required />
+            </label>
+
+            <label class="form-control w-full">
+              <span class="label-text mb-1">Password</span>
+              <input type="password" id="password" class="input input-bordered w-full" required />
+            </label>
+
+            <label class="form-control w-full">
+              <span class="label-text mb-1">Confirm Password</span>
+              <input type="password" id="confirmPassword" class="input input-bordered w-full" required />
+            </label>
+
+            <button type="submit" class="btn btn-secondary w-full">Create Account</button>
+          </form>
+
+          <div id="signupMessage" class="alert mt-3 hidden"></div>
+
+          <p class="mt-2 text-sm text-base-content/70">
+            Already have an account? <a href="login.html" class="link link-primary">Login</a>
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <script src="js/signup.js"></script>
+  </body>
+</html>

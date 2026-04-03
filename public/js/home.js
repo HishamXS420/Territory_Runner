@@ -41,12 +41,22 @@ async function loadRunHistory() {
     const historyList = document.getElementById('history-list');
 
     historyList.innerHTML = sessions.map(session => `
-      <div class="history-item">
-        <p><strong>Date:</strong> ${new Date(session.startTime || session.start_time).toLocaleString()}</p>
-        <p><strong>Distance:</strong> ${((session.totalDistance || session.total_distance || 0)).toFixed(2)} km</p>
-        <p><strong>Time:</strong> ${formatTime(session.totalTime || session.total_time || 0)}</p>
-        <p><strong>Calories:</strong> ${session.estimatedCalories || session.estimated_calories || 0}</p>
-        ${session.isClosedLoop ? `<p><strong>Territory Captured ✅</strong></p>` : ''}
+      <div class="card bg-base-100 shadow-sm">
+        <div class="card-body py-4">
+          <div class="flex items-start justify-between gap-2 flex-wrap">
+            <div class="space-y-1">
+              <p class="text-sm font-semibold text-base-content">
+                📅 ${new Date(session.startTime || session.start_time).toLocaleString()}
+              </p>
+              <div class="flex flex-wrap gap-4 text-sm text-base-content/70">
+                <span>📏 <strong>${((session.totalDistance || session.total_distance || 0)).toFixed(2)} km</strong></span>
+                <span>⏱ <strong>${formatTime(session.totalTime || session.total_time || 0)}</strong></span>
+                <span>🔥 <strong>${session.estimatedCalories || session.estimated_calories || 0} kcal</strong></span>
+              </div>
+            </div>
+            ${session.isClosedLoop ? `<span class="badge badge-success text-white text-xs self-center">Territory ✅</span>` : ''}
+          </div>
+        </div>
       </div>
     `).join('');
   } catch (error) {
